@@ -67,3 +67,25 @@ app.get('/pacientes', (req, res) => {
         }
     )
 })
+
+app.get('/consultas', (req, res) => {
+    const connection = mysql.createConnection({
+        host: DB_HOST,
+        user: DB_USER,
+        password: DB_PASSWORD,
+        database: DB_DATABASE
+    })
+    const sql = `
+       SELECT
+            m.nome as nome_medico, c.data_hora, p.nome as nome_paciente
+        FROM
+            tb_medico m, tb_consulta c, tb_paciente p
+            WHERE m.crm = c.crm AND c.cpf = p.cpf 
+    `
+    connection.execute(
+        sql,
+        (err, results, fields) => {
+            res.json(results)
+        }
+    )
+})
